@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/ioctl.h>
-#include "disp_manager.h"
+#include "../include/disp_manager.h"
 
 /*使用LCD framebuffer， 最下层的程序
  * 如需使用其它设备显示，可再单独写一个C文件*/

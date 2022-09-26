@@ -3,7 +3,7 @@
 //
 #include <stdio.h>
 #include <string.h>
-#include "disp_manager.h"
+#include "../include/disp_manager.h"
 
 /*承上启下
  * 可以选择是使用LCD framebuffer 还是使用web或者其它来进行显示*/
