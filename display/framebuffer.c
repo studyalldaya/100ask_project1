@@ -24,13 +24,11 @@ static unsigned int pixel_width;
 static int fb_device_init(void)
 {
     fd_fb = open("/dev/fb0", O_RDWR);
-    if (fd_fb < 0)
-    {
+    if (fd_fb < 0) {
         printf("can't open /dev/fb0\n");
         return -1;
     }
-    if (ioctl(fd_fb, FBIOGET_VSCREENINFO, &var))
-    {
+    if (ioctl(fd_fb, FBIOGET_VSCREENINFO, &var)) {
         printf("can't get var\n");
         return -1;
     }
@@ -39,8 +37,7 @@ static int fb_device_init(void)
     pixel_width = var.bits_per_pixel / 8;
     screen_size = var.xres * var.yres * var.bits_per_pixel / 8;
     fb_base = (unsigned char *) mmap(NULL, screen_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd_fb, 0);
-    if (fb_base == (unsigned char *) -1)
-    {
+    if (fb_base == (unsigned char *) -1) {
         printf("can't mmap\n");
         return -1;
     }

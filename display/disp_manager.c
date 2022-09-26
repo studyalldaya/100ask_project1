@@ -27,15 +27,12 @@ int put_pixel(int x, int y, unsigned int color)
     pen_16 = (unsigned short *) pen_8;
     pen_32 = (unsigned int *) pen_8;
 
-    switch (display_buffer.bpp)
-    {
-        case 8:
-        {
+    switch (display_buffer.bpp) {
+        case 8: {
             *pen_8 = color;
             break;
         }
-        case 16:
-        {
+        case 16: {
             /* 565 */
             red = (color >> 16) & 0xff;
             green = (color >> 8) & 0xff;
@@ -44,13 +41,11 @@ int put_pixel(int x, int y, unsigned int color)
             *pen_16 = color;
             break;
         }
-        case 32:
-        {
+        case 32: {
             *pen_32 = color;
             break;
         }
-        default:
-        {
+        default: {
             printf("can't surport %dbpp\n", display_buffer.bpp);
             return -1;
             break;
@@ -68,10 +63,8 @@ void register_display(struct display_device *dev)
 int select_default_display(char *name)
 {
     struct display_device *tmp = display_dev;
-    while (tmp)
-    {
-        if (strcmp(name, tmp->name) == 0)
-        {
+    while (tmp) {
+        if (strcmp(name, tmp->name) == 0) {
             display_default = tmp;
             return 0;
         }
@@ -84,14 +77,12 @@ int init_default_display(void)
 {
     int ret;
     ret = display_default->device_init();
-    if (ret)
-    {
+    if (ret) {
         printf("device_init err!\n");
         return -1;
     }
     ret = display_default->get_buffer(&display_buffer);
-    if (ret)
-    {
+    if (ret) {
         printf("get_buffer err!\n");
         return -1;
     }

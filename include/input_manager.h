@@ -5,6 +5,8 @@
 #ifndef INC_100ASK_PROJECT1_INPUT_MANAGER_H
 #define INC_100ASK_PROJECT1_INPUT_MANAGER_H
 
+#include <sys/time.h>
+
 #define INPUT_TYPE_TOUCH 1
 #define INPUT_TYPE_NET   2
 typedef struct input_data {
@@ -12,7 +14,7 @@ typedef struct input_data {
     int type;//touch or net?
     int x;
     int y;
-    int presure;
+    unsigned int presure;
     char *str[1024];//from net
 } Input_data;
 
