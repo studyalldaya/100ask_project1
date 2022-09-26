@@ -11,7 +11,7 @@
 #define INPUT_TYPE_NET   2
 typedef struct input_data {
     struct timeval time;
-    int type;//touch or net?
+    int type;//touchscreen or net?
     int x;
     int y;
     unsigned int presure;
