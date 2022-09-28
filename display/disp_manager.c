@@ -8,13 +8,13 @@
 /*承上启下
  * 可以选择是使用LCD framebuffer 还是使用web或者其它来进行显示*/
 
-static struct display_device *display_dev = NULL;
+static struct display_device *display_dev = NULL;//链表头
 static struct display_device *display_default = NULL;
 static Display_buffer display_buffer;
 static int line_width;
 static int pixel_width;
 
-extern void framebuffer_init(void);//声明该函数，在其它文件寻找该函数
+extern void framebuffer_register(void);//声明该函数，在其它文件寻找该函数
 
 int put_pixel(int x, int y, unsigned int color)
 {
@@ -56,7 +56,7 @@ int put_pixel(int x, int y, unsigned int color)
 
 void register_display(struct display_device *dev)
 {
-    dev->next = display_dev;//往前添加的链表，总是从最后register的dev开始
+    dev->next = display_dev;//
     display_dev = dev;//注册上来
 }
 
@@ -109,6 +109,6 @@ int flush_display_region(Region *region, Display_buffer *buffer)
 
 void display_init()
 {
-    framebuffer_init();
+    framebuffer_register();
 }
 

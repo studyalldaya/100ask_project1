@@ -46,3 +46,9 @@ static struct input_device touchscreen_dev = {
         .device_exit = touchscreen_device_exit,
         .get_input_data = touchscreen_get_input_data,
 };
+
+//向上注册设备，因为本文件内容都是static的
+void touchscreen_register(void)
+{
+    register_input(&touchscreen_dev);
+}

@@ -76,7 +76,7 @@ static struct display_device framebuffer_dev = {
         .flush_region = fb_flush_region,
 };
 
-void framebuffer_init(void)
+void framebuffer_register(void)
 {
     register_display(&framebuffer_dev);
 }

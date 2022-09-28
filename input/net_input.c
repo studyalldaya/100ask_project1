@@ -72,9 +72,14 @@ static int net_get_input_data(Input_data *inputData)
 
 }
 
-static struct input_device touchscreen_dev = {
+static struct input_device net_dev = {
         .name = "net",
         .device_init = net_device_init,
         .device_exit = net_device_exit,
         .get_input_data = net_get_input_data,
 };
+
+void net_register(void)
+{
+    register_input(&net_dev);
+}

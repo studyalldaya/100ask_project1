@@ -28,4 +28,13 @@ struct input_device {
     struct input_device *next;
 };
 
+void register_input(struct input_device *dev);
+
+//api
+void input_init(void);
+
+int input_device_init(void);
+
+int get_input_data(Input_data *data);
+
 #endif //INC_100ASK_PROJECT1_INPUT_MANAGER_H
