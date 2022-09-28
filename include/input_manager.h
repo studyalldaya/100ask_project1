@@ -15,7 +15,7 @@ typedef struct input_data {
     int x;
     int y;
     unsigned int presure;
-    char *str[1024];//from net
+    char str[1024];//from net
 } Input_data;
 
 struct input_device {
@@ -36,5 +36,7 @@ void input_init(void);
 int input_device_init(void);
 
 int get_input_data(Input_data *data);
+
+int input_device_exit(void);
 
 #endif //INC_100ASK_PROJECT1_INPUT_MANAGER_H

@@ -100,17 +100,29 @@ int input_device_init(void)
             pthread_create(&tid, NULL, input_recv_thread_func, temp);
         }
         temp = temp->next;
-
     }
+    return 0;
+}
+
+int input_device_exit(void)
+{
+    struct input_device *temp = input_dev;
+    while (temp) {
+        temp->device_exit();
+        temp = temp->next;
+    }
+    return 0;
 }
 
 /*没有数据就休眠，否则返回数据*/
 int get_input_data(Input_data *data)
 {
+    Input_data dt;
     pthread_mutex_lock(&mutex);
     pthread_cond_wait(&cond, &mutex);
-    if (!get_data(data)) {
+    if (!get_data(&dt)) {
         //成功得到数据
+        (*data) = dt;
         pthread_mutex_unlock(&mutex);
         return 0;
     } else {
