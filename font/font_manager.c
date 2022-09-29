@@ -22,12 +22,12 @@ void font_init(void)
     freetype_font_register();
 }
 
-
-int select_and_init_font(char *style, char *fname)
+//传入style以及  ttc文件 or ttf文件 ttf为字形文件，ttc里面含有多个ttf也就是含有多个字形，通过不同编码找到对应字形
+int select_and_init_font(char *style, char *file_path)
 {
     Font_style *ptTmp = fontStyleHead;
     while (ptTmp) {
-        if (strcmp(ptTmp->name, style))
+        if (strcmp(ptTmp->name, style) == 0)
             break;
         ptTmp = ptTmp->next;
     }
@@ -36,7 +36,7 @@ int select_and_init_font(char *style, char *fname)
         return -1;
 
     defaultFontStyle = ptTmp;
-    return ptTmp->font_init(fname);
+    return ptTmp->font_init(file_path);
 }
 
 int font_set_size(int size)

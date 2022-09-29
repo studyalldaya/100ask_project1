@@ -16,7 +16,7 @@ static int line_width;
 static int pixel_width;
 
 extern void framebuffer_register(void);//声明该函数，在其它文件寻找该函数
-
+//？
 void draw_font_bitmap(Font_bitmap *fbm, unsigned int color)
 {
     int i, j, p, q;
