@@ -6,6 +6,7 @@
 #define INC_100ASK_PROJECT1_INPUT_MANAGER_H
 
 #include <sys/time.h>
+#include "common.h"
 
 #define INPUT_TYPE_TOUCH 1
 #define INPUT_TYPE_NET   2

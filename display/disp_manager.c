@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../include/disp_manager.h"
+#include "../include/font_manager.h"
 
 /*承上启下
  * 可以选择是使用LCD framebuffer 还是使用web或者其它来进行显示*/
@@ -15,6 +16,32 @@ static int line_width;
 static int pixel_width;
 
 extern void framebuffer_register(void);//声明该函数，在其它文件寻找该函数
+
+void draw_font_bitmap(Font_bitmap *fbm, unsigned int color)
+{
+    int i, j, p, q;
+    int x = fbm->region.x;
+    int y = fbm->region.y;
+    int x_max = x + fbm->region.width;
+    int y_max = y + fbm->region.height;
+    int width = fbm->region.width;
+    unsigned char *buffer = fbm->buffer;
+
+    //printf("x = %d, y = %d\n", x, y);
+
+    for (j = y, q = 0; j < y_max; j++, q++) {
+        for (i = x, p = 0; i < x_max; i++, p++) {
+            if (i < 0 || j < 0 ||
+                i >= display_buffer.xres || j >= display_buffer.yres)
+                continue;
+
+            //image[j][i] |= bitmap->buffer[q * bitmap->width + p];
+            if (buffer[q * width + p])
+                put_pixel(i, j, color);
+        }
+    }
+
+}
 
 int put_pixel(int x, int y, unsigned int color)
 {

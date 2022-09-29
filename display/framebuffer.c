@@ -65,6 +65,7 @@ static int fb_get_buffer(Display_buffer *disp_buffer)
 
 static int fb_flush_region(Region *region, Display_buffer *buffer)
 {
+    //。。。
     return 0;
 }
 

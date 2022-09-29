@@ -5,6 +5,8 @@
 #ifndef INC_100ASK_PROJECT1_DISP_MANAGER_H
 #define INC_100ASK_PROJECT1_DISP_MANAGER_H
 
+#include "common.h"
+
 typedef struct Display_buffer {
     int xres;
     int yres;
@@ -12,12 +14,6 @@ typedef struct Display_buffer {
     char *fb_base;
 } Display_buffer;
 
-typedef struct Region {
-    int x;//左上角x
-    int y;//左上角y
-    int height;
-    int width;
-} Region;
 
 typedef struct Display_device {
     char *name;
