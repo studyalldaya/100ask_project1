@@ -9,7 +9,7 @@
 
 #define INPUT_TYPE_TOUCH 1
 #define INPUT_TYPE_NET   2
-typedef struct input_data {
+typedef struct Input_data {
     struct timeval time;
     int type;//touchscreen or net?
     int x;
@@ -18,17 +18,17 @@ typedef struct input_data {
     char str[1024];//from net
 } Input_data;
 
-struct input_device {
+typedef struct Input_device {
     char *name;
 
     int (*device_init)(void);//open
     int (*device_exit)(void);//close
     int (*get_input_data)(Input_data *inputData);
 
-    struct input_device *next;
-};
+    struct Input_device *next;
+} Input_device;
 
-void register_input(struct input_device *dev);
+void register_input(Input_device *dev);
 
 //api
 void input_init(void);

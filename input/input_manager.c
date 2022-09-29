@@ -43,7 +43,7 @@ static int get_data(Input_data *data)
 
 /*end --环形缓冲区--*/
 
-static struct input_device *input_dev = NULL;//链表头
+static Input_device *inputDev = NULL;//链表头
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
@@ -51,10 +51,10 @@ extern void touchscreen_register(void);
 
 extern void net_register(void);
 
-void register_input(struct input_device *dev)
+void register_input(Input_device *dev)
 {
-    dev->next = input_dev;
-    input_dev = dev;
+    dev->next = inputDev;
+    inputDev = dev;
 }
 
 void input_init(void)
@@ -69,7 +69,7 @@ void input_init(void)
 static void *input_recv_thread_func(void *data)
 {
     int ret;
-    struct input_device *dev = (struct input_device *) data;
+    Input_device *dev = (Input_device *) data;
     Input_data inputData;
     while (1) {
         /*读取数据*/
@@ -90,7 +90,7 @@ int input_device_init(void)
     int ret;
     pthread_t tid;
     /*对每一个dev ， init and pthread_create*/
-    struct input_device *temp = input_dev;
+    Input_device *temp = inputDev;
     while (temp) {
         /*init dev*/
         ret = temp->device_init();
@@ -106,7 +106,7 @@ int input_device_init(void)
 
 int input_device_exit(void)
 {
-    struct input_device *temp = input_dev;
+    Input_device *temp = inputDev;
     while (temp) {
         temp->device_exit();
         temp = temp->next;

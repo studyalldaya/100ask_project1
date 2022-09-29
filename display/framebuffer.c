@@ -68,7 +68,7 @@ static int fb_flush_region(Region *region, Display_buffer *buffer)
     return 0;
 }
 
-static struct display_device framebuffer_dev = {
+static Display_device framebuffer_dev = {
         .name = "fb",
         .device_init = fb_device_init,
         .device_exit = fb_device_exit,

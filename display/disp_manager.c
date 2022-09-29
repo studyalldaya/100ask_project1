@@ -8,8 +8,8 @@
 /*承上启下
  * 可以选择是使用LCD framebuffer 还是使用web或者其它来进行显示*/
 
-static struct display_device *display_dev = NULL;//链表头
-static struct display_device *display_default = NULL;
+static Display_device *display_dev = NULL;//链表头
+static Display_device *display_default = NULL;
 static Display_buffer display_buffer;
 static int line_width;
 static int pixel_width;
@@ -54,7 +54,7 @@ int put_pixel(int x, int y, unsigned int color)
     return 0;
 }
 
-void register_display(struct display_device *dev)
+void register_display(Display_device *dev)
 {
     dev->next = display_dev;//
     display_dev = dev;//注册上来
@@ -62,7 +62,7 @@ void register_display(struct display_device *dev)
 
 int select_default_display(char *name)
 {
-    struct display_device *tmp = display_dev;
+    Display_device *tmp = display_dev;
     while (tmp) {
         if (strcmp(name, tmp->name) == 0) {
             display_default = tmp;

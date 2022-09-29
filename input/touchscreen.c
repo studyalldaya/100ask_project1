@@ -40,7 +40,7 @@ static int touchscreen_get_input_data(Input_data *inputData)
     return 0;
 }
 
-static struct input_device touchscreen_dev = {
+static Input_device touchscreen_dev = {
         .name = "touchscreen",
         .device_init = touchscreen_device_init,
         .device_exit = touchscreen_device_exit,

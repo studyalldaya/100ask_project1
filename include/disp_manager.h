@@ -5,21 +5,21 @@
 #ifndef INC_100ASK_PROJECT1_DISP_MANAGER_H
 #define INC_100ASK_PROJECT1_DISP_MANAGER_H
 
-typedef struct display_buffer {
+typedef struct Display_buffer {
     int xres;
     int yres;
     int bpp;
     char *fb_base;
 } Display_buffer;
 
-typedef struct region {
+typedef struct Region {
     int x;//左上角x
     int y;//左上角y
     int height;
     int width;
 } Region;
 
-struct display_device {
+typedef struct Display_device {
     char *name;
 
     //函数指针用作多态
@@ -29,10 +29,10 @@ struct display_device {
 
     int (*flush_region)(Region *region, Display_buffer *buffer);
 
-    struct display_device *next;//支持多个输出  lcd or web
-};
+    struct Display_device *next;//支持多个输出  lcd or web
+} Display_device;
 
-void register_display(struct display_device *dev);
+void register_display(Display_device *dev);
 
 
 // api
