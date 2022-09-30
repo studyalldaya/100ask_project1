@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../include/disp_manager.h"
-#include "../include/font_manager.h"
+
 
 /*承上启下
  * 可以选择是使用LCD framebuffer 还是使用web或者其它来进行显示*/
@@ -16,7 +16,55 @@ static int line_width;
 static int pixel_width;
 
 extern void framebuffer_register(void);//声明该函数，在其它文件寻找该函数
-//？
+
+//在buton中间区域写text
+int draw_text_central(char *name, Region *region, unsigned int color)
+{
+    int originX, originY;
+    int i = 0;
+    Font_bitmap fbm;
+    int n = strlen(name);
+    int fontSize = region->width / n / 2;
+    if (fontSize > region->height)
+        fontSize = region->height;
+    originX = (region->width - fontSize * n) / 2 + region->x;
+    originY = (region->height - fontSize) / 2 + region->y + fontSize;
+    
+    font_set_size(fontSize);
+    while (name[i]) {
+        fbm.currOriginX = originX;
+        fbm.currOriginY = originY;
+        //获得点阵
+        if (font_get_bitmap(name[i], &fbm)) {
+            printf("get bitmap err!\n");
+            return -1;
+        }
+        draw_font_bitmap(&fbm, color);
+        //更新原点
+        originX = fbm.nextOriginX;
+        originY = fbm.nextOriginY;
+        i++;
+    }
+
+}
+
+//可用来画出button区域
+void draw_region(Region *region, unsigned int color)
+{
+    int x = region->x;
+    int y = region->y;
+    int width = region->width;
+    int height = region->height;
+    int i, j;
+    for (j = y; j < y + height; j++) {
+        for (i = x; i < x + width; i++) {
+            put_pixel(i, j, color);
+        }
+    }
+
+}
+
+
 void draw_font_bitmap(Font_bitmap *fbm, unsigned int color)
 {
     int i, j, p, q;
@@ -33,10 +81,10 @@ void draw_font_bitmap(Font_bitmap *fbm, unsigned int color)
         for (i = x, p = 0; i < x_max; i++, p++) {
             if (i < 0 || j < 0 ||
                 i >= display_buffer.xres || j >= display_buffer.yres)
-                continue;
+                continue;//如果超过了屏幕范围，跳过当前循环，执行下一次
 
             //image[j][i] |= bitmap->buffer[q * bitmap->width + p];
-            if (buffer[q * width + p])
+            if (buffer[q * width + p])//buffer里为1就画点
                 put_pixel(i, j, color);
         }
     }

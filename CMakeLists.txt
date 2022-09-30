@@ -8,6 +8,6 @@ set(LINK_DIR ~/100ask_imx6ull-sdk/ToolChain/arm-buildroot-linux-gnueabihf_sdk-bu
 include_directories(${INC_DIR} ${INC_DIR}/freetype2)
 link_directories(${LINK_DIR})
 
-add_executable(100ask_project1 main.c include/disp_manager.h display/framebuffer.c display/disp_manager.c include/input_manager.h input/touchscreen.c input/net_input.c input/input_manager.c include/font_manager.h font/font_freetype.c font/font_manager.c include/common.h)
+add_executable(100ask_project1 main.c include/disp_manager.h display/framebuffer.c display/disp_manager.c include/input_manager.h input/touchscreen.c input/net_input.c input/input_manager.c include/font_manager.h font/font_freetype.c font/font_manager.c include/common.h include/UI.h UI/button.c)
 
 target_link_libraries(100ask_project1 ts pthread freetype)

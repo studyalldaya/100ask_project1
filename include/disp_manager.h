@@ -6,6 +6,7 @@
 #define INC_100ASK_PROJECT1_DISP_MANAGER_H
 
 #include "common.h"
+#include "../include/font_manager.h"
 
 typedef struct Display_buffer {
     int xres;
@@ -39,6 +40,12 @@ int select_default_display(char *name);
 int init_default_display(void);
 
 int put_pixel(int x, int y, unsigned int color);
+
+void draw_font_bitmap(Font_bitmap *fbm, unsigned int color);
+
+void draw_region(Region *region, unsigned int color);
+
+int draw_text_central(char *name, Region *region, unsigned int color);
 
 Display_buffer *get_display_buffer(void);
 
