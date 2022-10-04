@@ -6,7 +6,7 @@
 #define INC_100ASK_PROJECT1_CONFIG_H
 
 #define ITEM_CONFIG_MAX_NUMBER 30
-#define CONFIG_FILE "/etc/test_gui/gui.conf"
+#define CONFIG_FILE "./gui.conf"
 
 
 //config文件的每一行为一个Item_config
@@ -16,6 +16,8 @@ typedef struct Item_config {
     int can_touch;//button能否点击
     char command[100];
 } Item_config;
+
+int parse_config_file(void);
 
 int get_itemcfg_count(void);//有多少行
 

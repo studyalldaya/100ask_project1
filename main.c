@@ -8,8 +8,11 @@
 #include "./include/UI.h"
 #include "./include/input_manager.h"
 #include "./include/page_manager.h"
+#include "./include/config.h"
 
+#if 1
 
+//总
 int main(int argc, char **argv)
 {
     Display_buffer *ptBuffer;
@@ -22,7 +25,7 @@ int main(int argc, char **argv)
     int lcd_y;
 
     if (argc != 2) {
-        printf("Usage: %s <font_file>\n", argv[0]);
+        printf("Usage: %s <font_file> \n", argv[0]);
         return -1;
     }
 
@@ -30,7 +33,7 @@ int main(int argc, char **argv)
     display_init();
     select_default_display("fb");
     init_default_display();
-    ptBuffer = get_display_buffer();
+    //ptBuffer = get_display_buffer();
 
     /*初始化输入系统*/
     input_init();
@@ -47,12 +50,16 @@ int main(int argc, char **argv)
     /*初始化页面系统*/
     page_init();
 
+    /*读取配置文件*/
+    // parse_config_file(argv[2]);
     /*运行业务系统主页面*/
     get_page("main")->run(NULL);
 
 
     return 0;
 }
+
+#endif
 
 #if 0
 /* ---- button UI test ---- */
@@ -95,4 +102,77 @@ int main(int argc, char **argv)
 
     return 0;
 }
+#endif
+
+#if 0
+
+//text text
+int main(int argc, char **argv)
+{
+    Display_buffer *ptBuffer;
+    int error;
+
+    Font_bitmap tFontBitMap;
+    char *str = "www.100ask.net";
+    int i = 0;
+    int lcd_x;
+    int lcd_y;
+    int font_size;
+
+
+    if (argc != 5) {
+        printf("Usage: %s <font_file> <lcd_x> <lcd_y> <font_size>\n", argv[0]);
+        return -1;
+    }
+
+    lcd_x = strtol(argv[2], NULL, 0);
+    lcd_y = strtol(argv[3], NULL, 0);
+
+    font_size = strtol(argv[4], NULL, 0);
+
+
+    display_init();
+
+    select_default_display("fb");
+
+    init_default_display();
+
+    ptBuffer = get_display_buffer();
+
+
+    font_init();
+
+    error = select_and_init_font("freetype", argv[1]);
+    if (error) {
+        printf("SelectAndInitFont err\n");
+        return -1;
+    }
+
+    font_set_size(font_size);
+
+    while (str[i]) {
+        /* get bitmap */
+        tFontBitMap.currOriginX = lcd_x;
+        tFontBitMap.currOriginY = lcd_y;
+        error = font_get_bitmap(str[i], &tFontBitMap);
+        if (error) {
+            printf("SelectAndInitFont err\n");
+            return -1;
+        }
+
+        /* draw on buffer */
+        draw_font_bitmap(&tFontBitMap, 0xff0000);
+
+        /* flush to lcd/web */
+        flush_display_region(&tFontBitMap.region, ptBuffer);
+
+
+        lcd_x = tFontBitMap.nextOriginX;
+        lcd_y = tFontBitMap.nextOriginY;
+        i++;
+    }
+
+    return 0;
+}
+
 #endif

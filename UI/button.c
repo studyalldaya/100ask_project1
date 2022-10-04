@@ -17,7 +17,7 @@ static int default_on_draw(struct Button *btn, Display_buffer *buffer)
 static int default_on_clicked(struct Button *btn, Display_buffer *buffer, Input_data *inputData)
 {
     unsigned int color = BUTTON_DEFAULT_COLOR;
-    btn->status = !btn->status;//每次点击，状态翻转
+    btn->status = !btn->status;//每次点击，状态翻转,每次点击都会换颜色
     if (btn->status)
         color = BUTTON_CLICKED_COLOR;
     draw_region(&btn->btn_region, color);
@@ -30,7 +30,8 @@ void init_button(Button *btn, char *name, Region *region, On_draw_ptr on_draw, O
 {
     btn->status = 0;
     btn->name = name;
-    btn->btn_region = *region;
+    if (region)
+        btn->btn_region = *region;
     btn->on_draw = on_draw ? on_draw : default_on_draw;
     btn->on_clicked = on_clicked ? on_clicked : default_on_clicked;
 }

@@ -12,6 +12,7 @@
 #define BUTTON_DEFAULT_COLOR 0xff0000
 #define BUTTON_CLICKED_COLOR 0x00ff00
 #define BUTTON_TEXT_COLOR    0x000000
+#define BUTTON_PERCENT_COLOR 0x0000ff
 struct Button;
 typedef int (*On_draw_ptr)(struct Button *btn, Display_buffer *buffer);
 typedef int (*On_clicked_ptr)(struct Button *btn, Display_buffer *buffer, Input_data *inputData);
