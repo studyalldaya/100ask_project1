@@ -29,7 +29,7 @@ int draw_text_central(char *name, Region *region, unsigned int color)
         fontSize = region->height;
     originX = (region->width - fontSize * n) / 2 + region->x;
     originY = (region->height - fontSize) / 2 + region->y + fontSize;
-    
+
     font_set_size(fontSize);
     while (name[i]) {
         fbm.currOriginX = originX;
@@ -93,7 +93,7 @@ void draw_font_bitmap(Font_bitmap *fbm, unsigned int color)
 
 int put_pixel(int x, int y, unsigned int color)
 {
-    unsigned char *pen_8 = display_buffer.fb_base + y * line_width + x * pixel_width;
+    unsigned char *pen_8 = (unsigned char *) (display_buffer.fb_base + y * line_width + x * pixel_width);
     unsigned short *pen_16;
     unsigned int *pen_32;
 

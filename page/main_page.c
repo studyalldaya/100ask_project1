@@ -18,6 +18,7 @@ static int n;//button数量
 static int main_page_on_clicked(struct Button *btn, Display_buffer *buffer, Input_data *inputData)
 {
     unsigned int color = BUTTON_DEFAULT_COLOR;
+
     char name[100];
     char netInputStatus[100];
     char *buttonName = btn->name;//百分比显示的text需要设置
@@ -33,9 +34,11 @@ static int main_page_on_clicked(struct Button *btn, Display_buffer *buffer, Inpu
     }
         /*对于net事件，根据传进来的字符串修改相应颜色*/
     else if (inputData->type == INPUT_TYPE_NET) {
+        printf("%s %s %d : a net_input\n", __FILE__, __FUNCTION__, __LINE__);
         sscanf(inputData->str, "%s %s", name, netInputStatus);
         if (strcmp(netInputStatus, "ok") == 0) {
             color = BUTTON_CLICKED_COLOR;
+
         } else if (strcmp(netInputStatus, "err") == 0) {
             color = BUTTON_DEFAULT_COLOR;
         } else if (netInputStatus[0] >= '0' && netInputStatus[0] <= '9') {
@@ -127,7 +130,7 @@ static Button *get_button_by_name(char *name)
 
 static Button *get_button_by_input_data(Input_data *inputData)
 {
-    int i, j;
+    int i;
     char name[100];
     if (inputData->type == INPUT_TYPE_TOUCH) {
         for (i = 0; i < n; i++) {
@@ -136,7 +139,7 @@ static Button *get_button_by_input_data(Input_data *inputData)
         }
 
     } else if (inputData->type == INPUT_TYPE_NET) {
-        strcpy(name, inputData->str);
+        sscanf(inputData->str, "%s", name);//只提取前一个name字符串，不能用strcpy
         return get_button_by_name(name);
 
     } else
@@ -154,14 +157,18 @@ static void main_page_run(void *param)
 
     /*根据配置文件生成button和界面*/
     generate_buttons();
-
+    //printf("%s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     while (1) {
         /*读取输入事件*/
         err = get_input_data(&inputData);
         if (err)
             continue;
+        //printf("%s %s %d:get_input_data\n", __FILE__, __FUNCTION__, __LINE__);
         /*根据输入事件type找到对应button*/
         button = get_button_by_input_data(&inputData);
+        if (!button)
+            continue;
+        //printf("%s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         /*执行相应button的on_clicked函数,*/
         button->on_clicked(button, displayBuffer, &inputData);
     }

@@ -83,6 +83,7 @@ static void *input_recv_thread_func(void *data)
             pthread_cond_signal(&cond);
         }
     }
+    return NULL;
 }
 
 int input_device_init(void)
@@ -114,6 +115,8 @@ int input_device_exit(void)
     return 0;
 }
 
+#if 1
+
 /*没有数据就休眠，否则返回数据*/
 int get_input_data(Input_data *data)
 {
@@ -130,3 +133,32 @@ int get_input_data(Input_data *data)
         return -1;
     }
 }
+
+#endif
+
+#if 0
+int get_input_data(Input_data *data)
+{
+    Input_data tEvent;
+    int ret;
+/* 无数据则休眠 */
+    pthread_mutex_lock(&mutex);
+    if (!get_data(&tEvent)) {
+        *data = tEvent;
+        pthread_mutex_unlock(&mutex);
+        return 0;
+    } else {
+/* 休眠等待 */
+        pthread_cond_wait(&cond, &mutex);
+        if (!get_data(&tEvent)) {
+            *data = tEvent;
+            ret = 0;
+        } else {
+            ret = -1;
+        }
+        pthread_mutex_unlock(&mutex);
+    }
+    return ret;
+
+}
+#endif

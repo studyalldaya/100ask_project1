@@ -12,6 +12,7 @@ static int default_on_draw(struct Button *btn, Display_buffer *buffer)
     draw_text_central(btn->name, &btn->btn_region, BUTTON_TEXT_COLOR);
     /*flush 到 lcd或其它设备*/
     flush_display_region(&btn->btn_region, buffer);
+    return 0;
 }
 
 static int default_on_clicked(struct Button *btn, Display_buffer *buffer, Input_data *inputData)
@@ -23,6 +24,7 @@ static int default_on_clicked(struct Button *btn, Display_buffer *buffer, Input_
     draw_region(&btn->btn_region, color);
     draw_text_central(btn->name, &btn->btn_region, BUTTON_TEXT_COLOR);
     flush_display_region(&btn->btn_region, buffer);
+    return 0;
 
 }
 

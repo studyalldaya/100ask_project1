@@ -15,15 +15,7 @@
 //总
 int main(int argc, char **argv)
 {
-    Display_buffer *ptBuffer;
     int error;
-
-    Font_bitmap tFontBitMap;
-    char *str = "www.100ask.net";
-    int i = 0;
-    int lcd_x;
-    int lcd_y;
-
     if (argc != 2) {
         printf("Usage: %s <font_file> \n", argv[0]);
         return -1;
@@ -33,7 +25,6 @@ int main(int argc, char **argv)
     display_init();
     select_default_display("fb");
     init_default_display();
-    //ptBuffer = get_display_buffer();
 
     /*初始化输入系统*/
     input_init();
@@ -46,15 +37,11 @@ int main(int argc, char **argv)
         printf("SelectAndInitFont err\n");
         return -1;
     }
-
     /*初始化页面系统*/
     page_init();
 
-    /*读取配置文件*/
-    // parse_config_file(argv[2]);
     /*运行业务系统主页面*/
     get_page("main")->run(NULL);
-
 
     return 0;
 }
@@ -172,6 +159,43 @@ int main(int argc, char **argv)
         i++;
     }
 
+    return 0;
+}
+
+#endif
+
+#if 0
+
+//input test
+int main(int argc, char **argv)
+{
+    int ret;
+    Input_data event;
+
+    input_init();
+    input_device_init();
+
+    while (1) {
+        printf("%s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+        ret = get_input_data(&event);
+
+        printf("%s %s %d, ret = %d\n", __FILE__, __FUNCTION__, __LINE__, ret);
+        if (ret) {
+            printf("GetInputEvent err!\n");
+            return -1;
+        } else {
+            printf("%s %s %d, event.iType = %d\n", __FILE__, __FUNCTION__, __LINE__, event.type);
+            if (event.type == INPUT_TYPE_TOUCH) {
+                printf("Type      : %d\n", event.type);
+                printf("iX        : %d\n", event.x);
+                printf("iY        : %d\n", event.y);
+                printf("iPressure : %d\n", event.presure);
+            } else if (event.type == INPUT_TYPE_NET) {
+                printf("Type      : %d\n", event.type);
+                printf("str       : %s\n", event.str);
+            }
+        }
+    }
     return 0;
 }
 
