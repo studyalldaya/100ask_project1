@@ -6,7 +6,7 @@
 #define INC_100ASK_PROJECT1_CONFIG_H
 
 #define ITEM_CONFIG_MAX_NUMBER 30
-#define CONFIG_FILE "/etc/test_gui/gui.conf"
+#define CONFIG_FILE "/etc/100ask_project1_cfg/100ask_project1.config"
 
 
 //config文件的每一行为一个Item_config

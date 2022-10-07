@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
 #include "../include/page_manager.h"
 #include "../include/config.h"
 #include "../include/UI.h"
@@ -51,16 +52,24 @@ static int main_page_on_clicked(struct Button *btn, Display_buffer *buffer, Inpu
 
     char name[100];
     char netInputStatus[100];
+    /*最后添加的，支持配置文件的command*/
+    char *commandStatus[3] = {"err", "ok", "percent"};
+    int commandStatusIndex = 0;//默认err
+    char command[1000];
+    Item_config *itemConfig;
+
     char *buttonName = btn->name;//百分比显示的text需要设置
     /*对于touch事件，先判断button是否支持touch事件*/
-    if (inputData->type == INPUT_TYPE_TOUCH) {
+    if (inputData->type == INPUT_TYPE_TOUCH && inputData->presure) {
         //不支持touch
         if (get_itemcfg_by_name(btn->name)->can_touch == 0)
             return -1;
         /*如果支持touch，变换颜色*/
         btn->status = !btn->status;//每次点击，状态翻转,每次点击都会换颜色
-        if (btn->status)
+        if (btn->status) {
             color = BUTTON_CLICKED_COLOR;
+            commandStatusIndex = 1;//ok
+        }
     }
         /*对于net事件，根据传进来的字符串修改相应颜色*/
     else if (inputData->type == INPUT_TYPE_NET) {
@@ -68,12 +77,14 @@ static int main_page_on_clicked(struct Button *btn, Display_buffer *buffer, Inpu
         sscanf(inputData->str, "%s %s", name, netInputStatus);
         if (strcmp(netInputStatus, "ok") == 0) {
             color = BUTTON_CLICKED_COLOR;
-
+            commandStatusIndex = 1;//ok
         } else if (strcmp(netInputStatus, "err") == 0) {
             color = BUTTON_DEFAULT_COLOR;
+            commandStatusIndex = 0;//err
         } else if (netInputStatus[0] >= '0' && netInputStatus[0] <= '9') {
             color = BUTTON_PERCENT_COLOR;
             buttonName = netInputStatus;//button text设置为百分比
+            commandStatusIndex = 2;
         } else
             return -1;
     } else
@@ -82,6 +93,14 @@ static int main_page_on_clicked(struct Button *btn, Display_buffer *buffer, Inpu
     draw_region(&btn->btn_region, color);
     draw_text_central(buttonName, &btn->btn_region, BUTTON_TEXT_COLOR);
     flush_display_region(&btn->btn_region, buffer);
+
+    /*执行command*/
+    itemConfig = get_itemcfg_by_name(btn->name);
+    if (itemConfig->command[0] != '\0') {
+        //构造出新的command 加上ok err percent给sh脚本提供参数,脚本里面使用$1即可得到该参数！
+        sprintf(command, "%s %s", itemConfig->command, commandStatus[commandStatusIndex]);
+        system(command);//相当于在shell上输入 command,不仅仅只能是.sh
+    }
     return 0;
 
 }
