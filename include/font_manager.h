@@ -24,6 +24,7 @@ typedef struct Font_style {
     int (*font_init)(char *fname);
     int (*font_set_size)(int size);
     int (*font_get_bitmap)(unsigned int code, Font_bitmap *fbt);//code：编码值
+    int (*font_get_text_bbox)(char *str, Cartesian_region *textBBox);
     struct Font_style *next;
 } Font_style;
 
@@ -32,5 +33,7 @@ void font_init(void);
 int select_and_init_font(char *style, char *fname);
 int font_set_size(int iFontSize);
 int font_get_bitmap(unsigned int code, Font_bitmap *fbm);//code为字符的编码值，可以直接传入'A'
+
+int font_get_text_bbox(char *str, Cartesian_region *textBBox);//得到字符str的bbox框，放入textBBox
 
 #endif //INC_100ASK_PROJECT1_FONT_MANAGER_H

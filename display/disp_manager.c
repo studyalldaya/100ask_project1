@@ -23,14 +23,17 @@ int draw_text_central(char *name, Region *region, unsigned int color)
     int originX, originY;
     int i = 0;
     Font_bitmap fbm;
-    int n = strlen(name);
-    int fontSize = region->width / n / 2;
-    if (fontSize > region->height)
-        fontSize = region->height;
-    originX = (region->width - fontSize * n) / 2 + region->x;
-    originY = (region->height - fontSize) / 2 + region->y + fontSize;
 
-    font_set_size(fontSize);
+    Cartesian_region cartesianRegion;
+
+    /*计算text的bbox框*/
+    font_get_text_bbox(name, &cartesianRegion);
+
+    /*计算第一个字符的原点*/
+    originX = region->x + (region->width - cartesianRegion.width) / 2 - cartesianRegion.x;//画图很容易理解
+    originY = region->y + (region->height - cartesianRegion.height) / 2 + cartesianRegion.y;
+
+    /*绘制*/
     while (name[i]) {
         fbm.currOriginX = originX;
         fbm.currOriginY = originY;
@@ -45,7 +48,7 @@ int draw_text_central(char *name, Region *region, unsigned int color)
         originY = fbm.nextOriginY;
         i++;
     }
-
+    return 0;
 }
 
 //可用来画出button区域
@@ -123,7 +126,7 @@ int put_pixel(int x, int y, unsigned int color)
         default: {
             printf("can't surport %dbpp\n", display_buffer.bpp);
             return -1;
-            break;
+
         }
     }
     return 0;
@@ -179,7 +182,7 @@ Display_buffer *get_display_buffer(void)
 
 int flush_display_region(Region *region, Display_buffer *buffer)
 {
-    display_dev->flush_region(region, buffer);
+    return display_dev->flush_region(region, buffer);
 }
 
 void display_init()

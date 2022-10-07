@@ -18,6 +18,7 @@ typedef int (*On_draw_ptr)(struct Button *btn, Display_buffer *buffer);
 typedef int (*On_clicked_ptr)(struct Button *btn, Display_buffer *buffer, Input_data *inputData);
 typedef struct Button {
     char *name;
+    int fontSize;
     int status;
     Region btn_region;
     On_draw_ptr on_draw;

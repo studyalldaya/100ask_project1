@@ -48,3 +48,8 @@ int font_get_bitmap(unsigned int code, Font_bitmap *fbm)
 {
     return defaultFontStyle->font_get_bitmap(code, fbm);
 }
+
+int font_get_text_bbox(char *str, Cartesian_region *textBBox)
+{
+    return defaultFontStyle->font_get_text_bbox(str, textBBox);
+}

@@ -14,6 +14,36 @@
 static Button buttons[ITEM_CONFIG_MAX_NUMBER];
 static int n;//button数量
 
+//后续添加以改善文字的显示效果
+static int get_font_size_for_all_button(void)
+{
+    int maxLen = -1;
+    int maxIndex;
+    int len;
+    Cartesian_region cartesianRegion;
+    float k, kx, ky;
+    /*找出文字最长的button*/
+    for (int i = 0; i < n; i++) {
+        len = strlen(buttons[i].name);
+        if (len > maxLen) {
+            maxLen = len;
+            maxIndex = i;
+        }
+    }
+    /*以font_size = 100,算出它的bbox框*/
+    font_set_size(100);
+    font_get_text_bbox(buttons[maxIndex].name, &cartesianRegion);
+    /*把文字的bbox缩放为button的bbox(region)*/
+    kx = (float) buttons[maxIndex].btn_region.width / cartesianRegion.width;
+    ky = (float) buttons[maxIndex].btn_region.height / cartesianRegion.height;
+    if (kx < ky)
+        k = kx;
+    else
+        k = ky;
+    /*反算出合适的font_size,为保证足够边界，取0.8吧*/
+    return k * 100 * 0.8;
+}
+
 /*init_button时传入此函数*/
 static int main_page_on_clicked(struct Button *btn, Display_buffer *buffer, Input_data *inputData)
 {
@@ -58,6 +88,7 @@ static int main_page_on_clicked(struct Button *btn, Display_buffer *buffer, Inpu
 
 static void generate_buttons(void)
 {
+    int fontSize;
     int width, height;
     int n_per_line;
 
@@ -103,8 +134,12 @@ static void generate_buttons(void)
             i++;
         }
     }
+    /*适配文字大小*/
+    fontSize = get_font_size_for_all_button();
+    //font_set_size(fontSize);
     /*ondraw*/
     for (i = 0; i < n; i++) {
+        buttons[i].fontSize = fontSize;
         buttons[i].on_draw(&buttons[i], dispBuffer);
     }
 }
@@ -144,7 +179,9 @@ static Button *get_button_by_input_data(Input_data *inputData)
 
     } else
         return NULL;
+    return NULL;
 }
+
 
 static void main_page_run(void *param)
 {
@@ -157,6 +194,7 @@ static void main_page_run(void *param)
 
     /*根据配置文件生成button和界面*/
     generate_buttons();
+
     //printf("%s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     while (1) {
         /*读取输入事件*/

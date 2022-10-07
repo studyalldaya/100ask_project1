@@ -3,12 +3,82 @@
 //
 #include <ft2build.h>
 #include <stdio.h>
+#include <wchar.h>
 #include "../include/font_manager.h"
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
 static FT_Face face;
 static int defaultFontSize = 12;
+
+
+static int freetype_get_text_bbox(char *str, Cartesian_region *textBBox)
+{
+    int i;
+    int error;
+    FT_BBox bbox;
+    FT_BBox glyph_bbox;
+    FT_Vector pen;
+    FT_Glyph glyph;
+    FT_GlyphSlot slot = face->glyph;
+
+    /* 初始化 */
+    bbox.xMin = bbox.yMin = 32000;
+    bbox.xMax = bbox.yMax = -32000;
+
+    /* 指定原点为(0, 0) */
+    pen.x = 0;
+    pen.y = 0;
+
+    /* 计算每个字符的bounding box */
+    /* 先translate, 再load char, 就可以得到它的外框了 */
+    for (i = 0; i < strlen(str); i++) {
+        /* 转换：transformation */
+        FT_Set_Transform(face, 0, &pen);
+
+        /* 加载位图: load glyph image into the slot (erase previous one) */
+        error = FT_Load_Char(face, str[i], FT_LOAD_RENDER);
+        if (error) {
+            printf("FT_Load_Char error\n");
+            return -1;
+        }
+
+        /* 取出glyph */
+        error = FT_Get_Glyph(face->glyph, &glyph);
+        if (error) {
+            printf("FT_Get_Glyph error!\n");
+            return -1;
+        }
+
+        /* 从glyph得到外框: bbox */
+        FT_Glyph_Get_CBox(glyph, FT_GLYPH_BBOX_TRUNCATE, &glyph_bbox);
+
+        /* 更新外框 */
+        if (glyph_bbox.xMin < bbox.xMin)
+            bbox.xMin = glyph_bbox.xMin;
+
+        if (glyph_bbox.yMin < bbox.yMin)
+            bbox.yMin = glyph_bbox.yMin;
+
+        if (glyph_bbox.xMax > bbox.xMax)
+            bbox.xMax = glyph_bbox.xMax;
+
+        if (glyph_bbox.yMax > bbox.yMax)
+            bbox.yMax = glyph_bbox.yMax;
+
+        /* 计算下一个字符的原点: increment pen position */
+        pen.x += slot->advance.x;
+        pen.y += slot->advance.y;
+    }
+
+    /* return string bbox */
+    textBBox->x = bbox.xMin;
+    textBBox->y = bbox.yMax;
+    textBBox->width = bbox.xMax - bbox.xMin + 1;
+    textBBox->height = bbox.yMax - bbox.yMin + 1;
+    return 0;
+}
+
 
 static int freetype_font_init(char *file_path)
 {
@@ -75,6 +145,7 @@ static Font_style freetype_style = {
         .font_init = freetype_font_init,
         .font_set_size = freetype_set_size,
         .font_get_bitmap = freetype_get_bitmap,
+        .font_get_text_bbox=freetype_get_text_bbox,
 };
 
 void freetype_font_register(void)

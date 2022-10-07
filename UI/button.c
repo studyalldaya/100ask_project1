@@ -9,6 +9,7 @@ static int default_on_draw(struct Button *btn, Display_buffer *buffer)
     /*绘制button区域*/
     draw_region(&btn->btn_region, BUTTON_DEFAULT_COLOR);
     /*居中显示文字*/
+    font_set_size(btn->fontSize);
     draw_text_central(btn->name, &btn->btn_region, BUTTON_TEXT_COLOR);
     /*flush 到 lcd或其它设备*/
     flush_display_region(&btn->btn_region, buffer);
