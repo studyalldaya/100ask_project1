@@ -13,7 +13,7 @@
 #define X_GAP 5
 #define Y_GAP 5
 static Button buttons[ITEM_CONFIG_MAX_NUMBER];
-static int n;//button数量
+static int n; // button数量
 
 //后续添加以改善文字的显示效果
 static int get_font_size_for_all_button(void)
@@ -53,22 +53,22 @@ static int main_page_on_clicked(struct Button *btn, Display_buffer *buffer, Inpu
     char name[100];
     char netInputStatus[100];
     /*最后添加的，支持配置文件的command*/
-    char *commandStatus[3] = {"err", "ok", "percent"};
-    int commandStatusIndex = 0;//默认err
+    char *commandStatus[3] = {"err", "ok", "percent"}; //可以根据配置文件的command的不同参数需求更改此数组。
+    int commandStatusIndex = 0;                        //默认err
     char command[1000];
     Item_config *itemConfig;
 
-    char *buttonName = btn->name;//百分比显示的text需要设置
+    char *buttonName = btn->name; //百分比显示的text需要设置
     /*对于touch事件，先判断button是否支持touch事件*/
     if (inputData->type == INPUT_TYPE_TOUCH && inputData->presure) {
         //不支持touch
         if (get_itemcfg_by_name(btn->name)->can_touch == 0)
             return -1;
         /*如果支持touch，变换颜色*/
-        btn->status = !btn->status;//每次点击，状态翻转,每次点击都会换颜色
+        btn->status = !btn->status; //每次点击，状态翻转,每次点击都会换颜色。
         if (btn->status) {
             color = BUTTON_CLICKED_COLOR;
-            commandStatusIndex = 1;//ok
+            commandStatusIndex = 1; // ok
         }
     }
         /*对于net事件，根据传进来的字符串修改相应颜色*/
@@ -77,13 +77,13 @@ static int main_page_on_clicked(struct Button *btn, Display_buffer *buffer, Inpu
         sscanf(inputData->str, "%s %s", name, netInputStatus);
         if (strcmp(netInputStatus, "ok") == 0) {
             color = BUTTON_CLICKED_COLOR;
-            commandStatusIndex = 1;//ok
+            commandStatusIndex = 1; // ok
         } else if (strcmp(netInputStatus, "err") == 0) {
             color = BUTTON_DEFAULT_COLOR;
-            commandStatusIndex = 0;//err
+            commandStatusIndex = 0; // err
         } else if (netInputStatus[0] >= '0' && netInputStatus[0] <= '9') {
             color = BUTTON_PERCENT_COLOR;
-            buttonName = netInputStatus;//button text设置为百分比
+            buttonName = netInputStatus; // button text设置为百分比
             commandStatusIndex = 2;
         } else
             return -1;
@@ -99,10 +99,9 @@ static int main_page_on_clicked(struct Button *btn, Display_buffer *buffer, Inpu
     if (itemConfig->command[0] != '\0') {
         //构造出新的command 加上ok err percent给sh脚本提供参数,脚本里面使用$1即可得到该参数！
         sprintf(command, "%s %s", itemConfig->command, commandStatus[commandStatusIndex]);
-        system(command);//相当于在shell上输入 command,不仅仅只能是.sh
+        system(command); //相当于在shell上输入 command,不仅仅只能是.sh
     }
     return 0;
-
 }
 
 static void generate_buttons(void)
@@ -111,8 +110,8 @@ static void generate_buttons(void)
     int width, height;
     int n_per_line;
 
-    int row, rows;//按钮行数
-    int col;//列
+    int row, rows; //按钮行数
+    int col;       //列
     Display_buffer *dispBuffer;
     int xres, yres;
     int start_x, start_y;
@@ -124,13 +123,13 @@ static void generate_buttons(void)
     dispBuffer = get_display_buffer();
     xres = dispBuffer->xres;
     yres = dispBuffer->yres;
-    width = sqrt(1.0 / 0.618 * xres * yres / n);//浮点运算 xres*yres=width*width*0.618*n
-    n_per_line = xres / width + 1;//多显示一个button，再次运算width和height
+    width = sqrt(1.0 / 0.618 * xres * yres / n); //浮点运算 xres*yres=width*width*0.618*n
+    n_per_line = xres / width + 1;               //多显示一个button，再次运算width和height
     width = xres / n_per_line;
     height = 0.618 * width;
 
     /*居中显示：计算每个button的region*/
-    start_x = (xres - width * n_per_line) / 2;//第一个buttond的左顶点x,y
+    start_x = (xres - width * n_per_line) / 2; //第一个buttond的左顶点x,y
     rows = n / n_per_line;
     if (rows * n_per_line < n) {
         /*rows为小数向下取整，rows+1*/
@@ -140,10 +139,10 @@ static void generate_buttons(void)
     /*计算每个button 的region*/
     for (row = 0; row < rows; row++) {
         pre_start_y = start_y + row * height;
-        pre_start_x = start_x - width;//   第一个button的x= （start_x-width） +width
+        pre_start_x = start_x - width; //   第一个button的x= （start_x-width） +width
         for (col = 0; (col < n_per_line) && (i < n); col++) {
-            button = &buttons[i];//计算buttons里的每一个button的region
-            button->btn_region.x = pre_start_x + width;//前面一个button的x+width
+            button = &buttons[i];                       //计算buttons里的每一个button的region
+            button->btn_region.x = pre_start_x + width; //前面一个button的x+width
             button->btn_region.y = pre_start_y;
             button->btn_region.width = width - X_GAP;
             button->btn_region.height = height - Y_GAP;
@@ -155,7 +154,7 @@ static void generate_buttons(void)
     }
     /*适配文字大小*/
     fontSize = get_font_size_for_all_button();
-    //font_set_size(fontSize);
+    // font_set_size(fontSize);
     /*ondraw*/
     for (i = 0; i < n; i++) {
         buttons[i].fontSize = fontSize;
@@ -191,16 +190,13 @@ static Button *get_button_by_input_data(Input_data *inputData)
             if (touch_point_in_button_region(inputData->x, inputData->y, &buttons[i].btn_region))
                 return &buttons[i];
         }
-
     } else if (inputData->type == INPUT_TYPE_NET) {
-        sscanf(inputData->str, "%s", name);//只提取前一个name字符串，不能用strcpy
+        sscanf(inputData->str, "%s", name); //只提取前一个name字符串，不能用strcpy
         return get_button_by_name(name);
-
     } else
         return NULL;
     return NULL;
 }
-
 
 static void main_page_run(void *param)
 {
@@ -214,18 +210,18 @@ static void main_page_run(void *param)
     /*根据配置文件生成button和界面*/
     generate_buttons();
 
-    //printf("%s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    // printf("%s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
     while (1) {
         /*读取输入事件*/
         err = get_input_data(&inputData);
         if (err)
             continue;
-        //printf("%s %s %d:get_input_data\n", __FILE__, __FUNCTION__, __LINE__);
+        // printf("%s %s %d:get_input_data\n", __FILE__, __FUNCTION__, __LINE__);
         /*根据输入事件type找到对应button*/
         button = get_button_by_input_data(&inputData);
         if (!button)
             continue;
-        //printf("%s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+        // printf("%s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
         /*执行相应button的on_clicked函数,*/
         button->on_clicked(button, displayBuffer, &inputData);
     }
