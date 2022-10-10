@@ -53,7 +53,7 @@ static int freetype_get_text_bbox(char *str, Cartesian_region *textBBox)
         /* 从glyph得到外框: bbox */
         FT_Glyph_Get_CBox(glyph, FT_GLYPH_BBOX_TRUNCATE, &glyph_bbox);
 
-        /* 更新外框 */
+        /* 更新外框 ,if判断是只取第一个字符的值*/
         if (glyph_bbox.xMin < bbox.xMin)
             bbox.xMin = glyph_bbox.xMin;
 

@@ -119,7 +119,7 @@ static int main_page_on_clicked(struct Button *btn,
         // percent给sh脚本提供参数,脚本里面使用$1即可得到该参数！
         sprintf(command, "%s %s", itemConfig->command,
                 commandStatus[commandStatusIndex]);
-        system(command); //相当于在shell上输入 command,不仅仅只能是.sh
+        system(command); //相当于在shell上输入 command,不仅仅只能是.sh，也可以是c文件
     }
     return 0;
 }
