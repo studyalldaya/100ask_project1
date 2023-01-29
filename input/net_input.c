@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <sys/types.h>          /* See NOTES */
+#include <sys/types.h> /* See NOTES */
 #include <sys/socket.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -15,9 +15,10 @@
 #include "../include/input_manager.h"
 
 #define SERVER_PORT 8888
+#define SERVER_IP_ADDR "127.0.0.1"
 static int socketServer;
 
-//server
+// server
 static int net_device_init(void)
 {
     struct sockaddr_in socketServerAddr;
@@ -29,8 +30,8 @@ static int net_device_init(void)
         return -1;
     }
     socketServerAddr.sin_family = AF_INET;
-    socketServerAddr.sin_port = htons(SERVER_PORT);  /* host to net, short */
-    socketServerAddr.sin_addr.s_addr = INADDR_ANY;
+    socketServerAddr.sin_port = htons(SERVER_PORT); /* host to net, short */
+    socketServerAddr.sin_addr.s_addr = inet_addr(SERVER_IP_ADDR);
     memset(socketServerAddr.sin_zero, 0, 8);
 
     ret = bind(socketServer, (const struct sockaddr *) &socketServerAddr, sizeof(struct sockaddr));
@@ -38,7 +39,6 @@ static int net_device_init(void)
         printf("bind error!\n");
         return -1;
     }
-
 
     return 0;
 }
@@ -59,7 +59,7 @@ static int net_get_input_data(Input_data *inputData)
     recvLen = recvfrom(socketServer, recvBuf, 999, 0, (struct sockaddr *) &socketClientAddr, &addrLen);
     if (recvLen > 0) {
         recvBuf[recvLen] = '\0';
-        //printf("Get Msg From %s : %s\n", inet_ntoa(SocketClientAddr.sin_addr), recv_buf);
+        // printf("Get Msg From %s : %s\n", inet_ntoa(SocketClientAddr.sin_addr), recv_buf);
         inputData->type = INPUT_TYPE_NET;
         gettimeofday(&inputData->time, NULL);
         strncpy(inputData->str, recvBuf, 1000);
@@ -69,7 +69,6 @@ static int net_get_input_data(Input_data *inputData)
         printf("No client msg!\n");
         return -1;
     }
-
 }
 
 static Input_device net_dev = {

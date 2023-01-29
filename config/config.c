@@ -13,6 +13,7 @@ int parse_config_file(void)
     FILE *fp;
     char buf[100];
     char *p = NULL;
+    
     /*open config file*/
     //fp = fopen(fileName, "r");
     fp = fopen(CONFIG_FILE, "r");
