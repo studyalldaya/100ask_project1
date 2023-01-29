@@ -3,3 +3,4 @@ cmake-build-debug-book
 .idea
 .vscode
 .clion.source.upload.marker
+.gitignore
