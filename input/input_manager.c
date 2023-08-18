@@ -117,7 +117,7 @@ int input_device_exit(void)
 
 #if 1
 
-/*没有数据就休眠，否则返回数据*/
+/*没有数据就休眠，否则返回数据,加入条件变量，防止线程在没有输入数据时一直不断轮询获得锁检查是否有数据然后解锁*/
 int get_input_data(Input_data *data)
 {
     Input_data dt;
